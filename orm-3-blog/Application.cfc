@@ -1,6 +1,6 @@
 component {
 
-    THIS.name="appORMBlog";
+    THIS.name="appORM3Blog";
     THIS.sessionManagement="true";
     THIS.ormEnabled = "true";
     THIS.datasource="test";

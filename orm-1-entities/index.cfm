@@ -21,10 +21,14 @@
           <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
           <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
         <![endif]-->
-        <title>Lucee Minute: ORM 1 - Hello World</title>
+        <title>Lucee Minute: ORM 1 - Entities</title>
     </head>
     <body>
         <div class="container">
+            <div class="jumbotron">
+                <h1>Lucee Minute</h1>
+                <p class="lead">ORM 1 - Entities</p>
+            </div>
             <div class="row">
                 <cfoutput>
                 <h1>Load Entities</h1>

@@ -1,6 +1,6 @@
 component accessors="true" output="false" persistent="false" {
 
-    THIS.name="appORMHelloWorld";
+    THIS.name="appORM1Entities";
     THIS.sessionManagement="true";
     THIS.ormEnabled = "true";
     THIS.datasource="test";
