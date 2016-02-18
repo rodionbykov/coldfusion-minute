@@ -23,6 +23,8 @@
         <![endif]-->
         <title>Lucee Minute: ORM 2 - Relationships</title>
     </head>
+    <cfset ORMReload() />
+    <cfoutput>
     <body>
         <div class="container">
             <div class="jumbotron">
@@ -30,30 +32,7 @@
                 <p class="lead">ORM 2 - Relationships</p>
             </div>
             <div class="row">
-                <cfoutput>
-                <h1>Load Entities</h1>
-                <p class="lead">Get Users: function EntityLoad</p>
-
-                <blockquote class="blockquote">
-                    <p>EntityLoad("User");</p>
-                </blockquote>
-
-                <cfset users = EntityLoad("User") />
-                <table class="table table-striped">
-                    <thead>
-                        <tr>
-                            <th>ID</th><th>Login</th><th>Full Name</th><th>Description</th>
-                        </tr>
-                    </thead>
-                    <cfloop array="#users#" index="u">
-                        <tr>
-                            <td>#u.getID()#</td><td>#u.getLogin()#</td><td>#u.getFirstName()# #u.getLastName()#</td><td>#u.getDescription()#</td>
-                        </tr>
-                    </cfloop>
-                </table>
-            </div>
-            <div class="row">
-                <h1>Load Entity</h1>
+                <h1>Load Entity and its related Entities</h1>
                 <p class="lead">Get User: function EntityLoadByPK</p>
 
                 <blockquote class="blockquote">
@@ -61,6 +40,7 @@
                 </blockquote>
 
                 <cfset user = EntityLoadByPK("User", 1) />
+
                 <table class="table table-striped">
                     <thead>
                         <tr>
@@ -72,184 +52,84 @@
                         </tr>
                 </table>
 
-                <h1>Update Entity</h1>
-                <p class="lead">Update and Save User: function EntitySave</p>
-                <p>We'll take random user and change user's description with random value</p>
+                <p>User has associated blog Posts, such relationship is called 'one-to-many'. Associated entities are returned in array.</p>
 
                 <blockquote class="blockquote">
-                    <p>user.setDescription("some text"); EntitySave(user);</p>
+                    <p>user.getPosts();</p>
                 </blockquote>
 
-                <!--- text database --->
-                <cfset listAdjectives = "Brave,Great,Strong,Talented,Old,Young" />
-                <cfset listNouns = "Apprentice,Grasshopper,Mentor,Master,Teacher,Warrior" />
+                <cfset posts = user.getPosts() />
 
-                <!--- pick random user from users array we had retrieved before --->
-                <cfset i = RandRange(1, ArrayLen(users)) />
-                <cfset randomUser = users[i] />
-            </div>
-            <div class="row">
-                <div class="col-md-6">
-                    <h4>Before</h4>
-                    <table class="table table-striped">
-                        <thead>
-                            <tr>
-                                <th>ID</th><th>Login</th><th>Full Name</th><th>Description</th>
-                            </tr>
-                        </thead>
-                            <tr>
-                                <td>#randomUser.getID()#</td><td>#randomUser.getLogin()#</td><td>#randomUser.getFirstName()# #randomUser.getLastName()#</td><td>#randomUser.getDescription()#</td>
-                            </tr>
-                    </table>
-                </div>
-
-                <!--- pick one random adjective and one random noun --->
-                <cfset adjective = ListGetAt(listAdjectives, RandRange(1, ListLen( listAdjectives ))) />
-                <cfset noun = ListGetAt(listNouns, RandRange(1, ListLen( listNouns ))) />
-
-                <!--- set description field of user to new value --->
-                <cfset randomUser.setDescription(adjective & " " & noun) />
-
-                <!--- save to database --->
-                <cfset EntitySave(randomUser) />
-
-                <div class="col-md-6">
-                    <h4>After</h4>
-                    <table class="table table-striped">
-                        <thead>
-                            <tr>
-                                <th>ID</th><th>Login</th><th>Full Name</th><th>Description</th>
-                            </tr>
-                        </thead>
-                            <tr>
-                                <td>#randomUser.getID()#</td><td>#randomUser.getLogin()#</td><td>#randomUser.getFirstName()# #randomUser.getLastName()#</td><td>#randomUser.getDescription()#</td>
-                            </tr>
-                    </table>
-                </div>
-            </div>
-            <div class="row">
-                <h1>Loading Entities Again</h1>
-                <p class="lead">Checking changes made</p>
-
-                <blockquote class="blockquote">
-                    <p>EntityLoad("User");</p>
-                </blockquote>
-
-                <cfset users = EntityLoad("User") />
                 <table class="table table-striped">
                     <thead>
                         <tr>
-                            <th>ID</th><th>Login</th><th>Full Name</th><th>Description</th>
+                            <th>ID</th><th>Title</th><th>Subtitle</th><th>Body</th><th>Moment</th>
                         </tr>
                     </thead>
-                    <cfloop array="#users#" index="u">
+                    <tbody>
+                    <cfloop array="#posts#" index="p">
                         <tr>
-                            <td>#u.getID()#</td><td>#u.getLogin()#</td><td>#u.getFirstName()# #u.getLastName()#</td><td>#u.getDescription()#</td>
+                            <td>#p.getID()#</td><td>#p.getTitle()#</td><td>#Left(p.getSubtitle(), 40)#&hellip;</td><td>#Left(p.getBody(), 40)#&hellip;</td><td>#DateFormat(p.getMoment(), "long")#</td>
                         </tr>
                     </cfloop>
+                    </tbody>
                 </table>
             </div>
             <div class="row">
-                <h1>Inserting Entity</h1>
-                <p class="lead">Adding new User: function EntityNew</p>
-                <p>Create new entity and fill its properties:</p>
+                <h1>Add related entity</h1>
+
+                <p class="lead">Create Post entity</p>
 
                 <blockquote class="blockquote">
-                    <p>newUser = EntityNew("User"); newUser.setLogin("sith"); newUser.setFirstName("Darth"); newUser.setLastName("Maul"); EntitySave(newUser);</p>
+                    <p>post = EntityNew("Post"); post.setTitle("Blah"); EntitySave(post);</p>
                 </blockquote>
-                <p>There's no ID, since ID is assigned by database server, and also we omitted Description field, which remained empty.</p>
-                <cfset newUser = EntityNew("User") />
-                <cfset newUser.setLogin("sith") />
-                <cfset newUser.setFirstName("Darth") />
-                <cfset newUser.setLastName("Maul") />
-                <cfset EntitySave(newUser) />
 
-                <p class="lead">Loading data again with EntityLoad function</p>
-                <cfset users = EntityLoad("User") />
+                <p>Hint: do not set NOT NULL to foreign key field, Posts.id_author in our case. Lucee will INSERT entity first, and later UPDATE it to associate with User.</p>
+
+                <cfset post = EntityNew("Post") />
+                <cfset post.setTitle("Blah") />
+                <cfset post.setBody("Blah Blah Blah") />
+                <cfset post.setMoment(Now()) />
+                <cfset EntitySave(post) />
+
                 <table class="table table-striped">
                     <thead>
                         <tr>
-                            <th>ID</th><th>Login</th><th>Full Name</th><th>Description</th>
+                            <th>ID</th><th>Title</th><th>Subtitle</th><th>Body</th><th>Moment</th>
                         </tr>
                     </thead>
-                    <cfloop array="#users#" index="u">
+                    <tbody>
                         <tr>
-                            <td>#u.getID()#</td><td>#u.getLogin()#</td><td>#u.getFirstName()# #u.getLastName()#</td><td>#u.getDescription()#</td>
+                            <td>#post.getID()#</td><td>#post.getTitle()#</td><td>#Left(post.getSubtitle(), 40)#&hellip;</td><td>#Left(post.getBody(), 40)#&hellip;</td><td>#DateFormat(post.getMoment(), "long")#</td>
                         </tr>
-                    </cfloop>
+                    </tbody>
                 </table>
+
+                <p class="lead">Add Post: function addPost</p>
+
+                <blockquote class="blockquote">
+                    <p>user.addPost(post);</p>
+                </blockquote>
+
+                <p>Lucee will add Post to User's Posts array, and automatically associate Post with User in database. No need to save User entity - Lucee will do it for you.</p>
+
+                <cfset user.addPost(post) />
+
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>ID</th><th>Title</th><th>Subtitle</th><th>Body</th><th>Moment</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>#post.getID()#</td><td>#post.getTitle()#</td><td>#Left(post.getSubtitle(), 40)#&hellip;</td><td>#Left(post.getBody(), 40)#&hellip;</td><td>#DateFormat(post.getMoment(), "long")#</td>
+                        </tr>
+                    </tbody>
+                </table>
+
             </div>
-            <div class="row">
-                <h1>Removing Entity</h1>
-                <p class="lead">Deleting User: function EntityDelete</p>
-
-                <blockquote class="blockquote">
-                    <p>EntityDelete(newUser)</p>
-                </blockquote>
-
-                <p>After delete we use ORMFlush function to commit changes to database. Normally changes committed at page request end.</p>
-
-                <blockquote class="blockquote">
-                    <p>ORMFlush()</p>
-                </blockquote>
-
-                <p>Important to remember that after delete object still exists, but lost its connection with database</p>
-
-                <div class="row">
-                    <div class="col-md-6">
-                        <h4>Before</h4>
-                        <table class="table table-striped">
-                            <thead>
-                                <tr>
-                                    <th>ID</th><th>Login</th><th>Full Name</th><th>Description</th>
-                                </tr>
-                            </thead>
-                                <tr>
-                                    <td>#newUser.getID()#</td><td>#newUser.getLogin()#</td><td>#newUser.getFirstName()# #newUser.getLastName()#</td><td>#newUser.getDescription()#</td>
-                                </tr>
-                        </table>
-                    </div>
-
-                    <cfset EntityDelete(newUser) />
-                    <!--- run ORMFlush to commit changes --->
-                    <cfset ORMFlush() />
-
-                    <div class="col-md-6">
-                        <h4>After</h4>
-                        <table class="table table-striped">
-                            <thead>
-                                <tr>
-                                    <th>ID</th><th>Login</th><th>Full Name</th><th>Description</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td>#newUser.getID()#</td><td>#newUser.getLogin()#</td><td>#newUser.getFirstName()# #newUser.getLastName()#</td><td>#newUser.getDescription()#</td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-                <div class="row">
-                    <p class="lead">Loading data again with EntityLoad function</p>
-                    <p>Check that record is gone</p>
-                    <cfset users = EntityLoad("User") />
-                    <table class="table table-striped">
-                        <thead>
-                            <tr>
-                                <th>ID</th><th>Login</th><th>Full Name</th><th>Description</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <cfloop array="#users#" index="u">
-                            <tr>
-                                <td>#u.getID()#</td><td>#u.getLogin()#</td><td>#u.getFirstName()# #u.getLastName()#</td><td>#u.getDescription()#</td>
-                            </tr>
-                            </cfloop>
-                        </tbody>
-                    </table>
-                </div>
-            </cfoutput>
         </div>
     </body>
+    </cfoutput>
 </html>

@@ -7,6 +7,12 @@ component accessors="true" output="false" persistent="true" table="users" {
     property name="lastname" column="lastname" ormtype="string";
     property name="description" column="description" ormtype="string";
 
-    property name="posts" type="array" fieldtype="one-to-many" cfc="Post" fkcolumn="id_author" orderby="id desc";
+    property name="posts"
+             type="array"
+             fieldtype="one-to-many"
+             cfc="Post"
+             fkcolumn="id_author"
+             orderby="id desc"
+             singularname="Post";
 
 }

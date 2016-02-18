@@ -23,6 +23,8 @@
         <![endif]-->
         <title>Lucee Minute: ORM 1 - Entities</title>
     </head>
+    <cfset ORMReload() />
+    <cfoutput>
     <body>
         <div class="container">
             <div class="jumbotron">
@@ -30,7 +32,6 @@
                 <p class="lead">ORM 1 - Entities</p>
             </div>
             <div class="row">
-                <cfoutput>
                 <h1>Load Entities</h1>
                 <p class="lead">Get Users: function EntityLoad</p>
 
@@ -230,26 +231,27 @@
                         </table>
                     </div>
                 </div>
-                <div class="row">
-                    <p class="lead">Loading data again with EntityLoad function</p>
-                    <p>Check that record is gone</p>
-                    <cfset users = EntityLoad("User") />
-                    <table class="table table-striped">
-                        <thead>
-                            <tr>
-                                <th>ID</th><th>Login</th><th>Full Name</th><th>Description</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <cfloop array="#users#" index="u">
-                            <tr>
-                                <td>#u.getID()#</td><td>#u.getLogin()#</td><td>#u.getFirstName()# #u.getLastName()#</td><td>#u.getDescription()#</td>
-                            </tr>
-                            </cfloop>
-                        </tbody>
-                    </table>
-                </div>
-            </cfoutput>
+            </div>
+            <div class="row">
+                <p class="lead">Loading data again with EntityLoad function</p>
+                <p>Check that record is gone</p>
+                <cfset users = EntityLoad("User") />
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>ID</th><th>Login</th><th>Full Name</th><th>Description</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <cfloop array="#users#" index="u">
+                        <tr>
+                            <td>#u.getID()#</td><td>#u.getLogin()#</td><td>#u.getFirstName()# #u.getLastName()#</td><td>#u.getDescription()#</td>
+                        </tr>
+                        </cfloop>
+                    </tbody>
+                </table>
+            </div>
         </div>
     </body>
+    </cfoutput>
 </html>
