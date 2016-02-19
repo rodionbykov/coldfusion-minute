@@ -52,13 +52,15 @@
                         </tr>
                 </table>
 
-                <p>User has associated blog Posts, such relationship is called 'one-to-many'. Associated entities are returned in array.</p>
+                <p class="lead">User has associated blog Posts, such relationship is called 'one-to-many'</p>
 
                 <blockquote class="blockquote">
                     <p>user.getPosts();</p>
                 </blockquote>
 
                 <cfset posts = user.getPosts() />
+
+                <p>Associated entities are returned in array.</p>
 
                 <table class="table table-striped">
                     <thead>
@@ -111,9 +113,92 @@
                     <p>user.addPost(post);</p>
                 </blockquote>
 
-                <p>Lucee will add Post to User's Posts array, and automatically associate Post with User in database. No need to save User entity - Lucee will do it for you.</p>
+                <p>Lucee will add Post to User's Posts array, and automatically associate Post with User in database (fill <em>id_author</em> field). No need to save User entity - Lucee will do it for you.</p>
 
                 <cfset user.addPost(post) />
+
+                <cfset posts = user.getPosts() />
+
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>ID</th><th>Title</th><th>Subtitle</th><th>Body</th><th>Moment</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    <cfloop array="#posts#" index="p">
+                        <tr>
+                            <td>#p.getID()#</td><td>#p.getTitle()#</td><td>#Left(p.getSubtitle(), 40)#&hellip;</td><td>#Left(p.getBody(), 40)#&hellip;</td><td>#DateFormat(p.getMoment(), "long")#</td>
+                        </tr>
+                    </cfloop>
+                    </tbody>
+                </table>
+
+                <h1>Remove related entity</h1>
+
+                <p class="lead">Remove Post: function removePost</p>
+
+                <blockquote class="blockquote">
+                    <p>user.removePost(post);</p>
+                </blockquote>
+
+                <p>Lucee will remove Post from User's Posts array and de-associate Post with User (nullify <em>id_author</em> field in database).</p>
+
+                <cfset user.removePost(post) />
+
+                <cfset posts = user.getPosts() />
+
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>ID</th><th>Title</th><th>Subtitle</th><th>Body</th><th>Moment</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    <cfloop array="#posts#" index="p">
+                        <tr>
+                            <td>#p.getID()#</td><td>#p.getTitle()#</td><td>#Left(p.getSubtitle(), 40)#&hellip;</td><td>#Left(p.getBody(), 40)#&hellip;</td><td>#DateFormat(p.getMoment(), "long")#</td>
+                        </tr>
+                    </cfloop>
+                    </tbody>
+                </table>
+
+                <p class="lead">Delete Post from database with EntityDelete</p>
+
+                <blockquote class="blockquote">
+                    <p>EntityDelete(post);</p>
+                </blockquote>
+
+                <p>Post will not be removed from database after de-association. You'll need to explicitly delete it.</p>
+
+                <cfset EntityDelete(post) />
+
+                <cfset ORMFlush() />
+
+                <cfset posts = user.getPosts() />
+
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>ID</th><th>Title</th><th>Subtitle</th><th>Body</th><th>Moment</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    <cfloop array="#posts#" index="p">
+                        <tr>
+                            <td>#p.getID()#</td><td>#p.getTitle()#</td><td>#Left(p.getSubtitle(), 40)#&hellip;</td><td>#Left(p.getBody(), 40)#&hellip;</td><td>#DateFormat(p.getMoment(), "long")#</td>
+                        </tr>
+                    </cfloop>
+                    </tbody>
+                </table>
+
+                <h1>Manipulate parent entity</h1>
+
+                <p class="lead">Each of Post entities is aware of parent User (Author) entity through relationship called 'many-to-one'</p>
+
+                <cfset post = posts[ RandRange(1, ArrayLen(posts)) ] />
+
+                <p>Pick random Post and re-associate it with random User</p>
 
                 <table class="table table-striped">
                     <thead>
@@ -127,6 +212,62 @@
                         </tr>
                     </tbody>
                 </table>
+
+                <p class="lead">Get/Set Post's Author: getAuthor and setAuthor</p>
+
+                <blockquote class="blockquote">
+                    <p>post.getAuthor(); post.setAuthor(newAuthor);</p>
+                </blockquote>
+
+                <cfset author = post.getAuthor() />
+
+                <p>In database Lucee will change <em>id_author</em> for Post, re-associating Post with new User (Author)</p>
+
+                <div class="row">
+                    <div class="col-md-6">
+                        <h4>Before</h4>
+                        <table class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th>ID</th><th>Login</th><th>Full Name</th><th>Description</th>
+                                </tr>
+                            </thead>
+                                <tr>
+                                    <td>#author.getID()#</td><td>#author.getLogin()#</td><td>#author.getFirstName()# #author.getLastName()#</td><td>#author.getDescription()#</td>
+                                </tr>
+                        </table>
+                    </div>
+
+                    <cfset users = EntityLoad("User") />
+
+                    <cfset newAuthor = users[ RandRange(1, ArrayLen(users)) ] />
+
+                    <cfset post.setAuthor(newAuthor) />
+
+                    <!--- it's not necessary to do, but to be sure data is changed in db --->
+                    <cfset ORMFlush() />
+
+                    <div class="col-md-6">
+                        <h4>After</h4>
+                        <table class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th>ID</th><th>Login</th><th>Full Name</th><th>Description</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>#newAuthor.getID()#</td><td>#newAuthor.getLogin()#</td><td>#newAuthor.getFirstName()# #newAuthor.getLastName()#</td><td>#newAuthor.getDescription()#</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <!--- for demo purposes returning post's author back --->
+                    <cfset post.setAuthor(author) />
+                    <cfset ORMFlush() />
+
+                </div>
 
             </div>
         </div>
