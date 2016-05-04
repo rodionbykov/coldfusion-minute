@@ -36,7 +36,7 @@
                 <p class="lead">Get User: function EntityLoadByPK</p>
 
                 <blockquote class="blockquote">
-                    <p>EntityLoadByPK("User", 1);</p>
+                    <p>user = EntityLoadByPK("User", 1);</p>
                 </blockquote>
 
                 <cfset user = EntityLoadByPK("User", 1) />
@@ -55,7 +55,7 @@
                 <p class="lead">User has associated blog Posts, such relationship is called 'one-to-many'</p>
 
                 <blockquote class="blockquote">
-                    <p>user.getPosts();</p>
+                    <p>posts = user.getPosts();</p>
                 </blockquote>
 
                 <cfset posts = user.getPosts() />
@@ -76,6 +76,18 @@
                     </cfloop>
                     </tbody>
                 </table>
+                                
+                <p class="lead">We can check if User entity has associated Posts entities</p>
+
+                <blockquote class="blockquote">
+                    <p>hasPost = user.hasPost();</p>
+                </blockquote>
+
+                <cfset hasPost = user.hasPost() />
+
+                <p>Result of this operation is returned as boolean value, 'true' if Posts array has elements, and 'false' if it is empty</p>
+
+                <cfdump var="#hasPost#" />                                
             </div>
             <div class="row">
                 <h1>Add related entity</h1>
@@ -216,7 +228,7 @@
                 <p class="lead">Get/Set Post's Author: getAuthor and setAuthor</p>
 
                 <blockquote class="blockquote">
-                    <p>post.getAuthor(); post.setAuthor(newAuthor);</p>
+                    <p>author = post.getAuthor(); post.setAuthor(newAuthor);</p>
                 </blockquote>
 
                 <cfset author = post.getAuthor() />
