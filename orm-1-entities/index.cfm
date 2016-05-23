@@ -36,7 +36,7 @@
                 <p class="lead">Get Users: function EntityLoad</p>
 
                 <blockquote class="blockquote">
-                    <p>EntityLoad("User");</p>
+                    <p>users = EntityLoad("User");</p>
                 </blockquote>
 
                 <cfset users = EntityLoad("User") />
@@ -58,7 +58,7 @@
                 <p class="lead">Get User: function EntityLoadByPK</p>
 
                 <blockquote class="blockquote">
-                    <p>EntityLoadByPK("User", 1);</p>
+                    <p>user = EntityLoadByPK("User", 1);</p>
                 </blockquote>
 
                 <cfset user = EntityLoadByPK("User", 1) />
@@ -82,8 +82,8 @@
                 </blockquote>
 
                 <!--- text database --->
-                <cfset listAdjectives = "Brave,Great,Strong,Talented,Old,Young" />
-                <cfset listNouns = "Apprentice,Grasshopper,Mentor,Master,Teacher,Warrior" />
+                <cfset listAdjectives = "Brave,Great,Strong,Talented,Old,Young,Handsome,Charming,Loyal,Cunning" />
+                <cfset listNouns = "Apprentice,Grasshopper,Mentor,Master,Teacher,Warrior,Smuggler,Scoundrel,Friend,Politician" />
 
                 <!--- pick random user from users array we had retrieved before --->
                 <cfset i = RandRange(1, ArrayLen(users)) />
@@ -133,7 +133,7 @@
                 <p class="lead">Checking changes made</p>
 
                 <blockquote class="blockquote">
-                    <p>EntityLoad("User");</p>
+                    <p>users = EntityLoad("User");</p>
                 </blockquote>
 
                 <cfset users = EntityLoad("User") />
