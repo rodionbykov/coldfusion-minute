@@ -1,0 +1,3 @@
+<cfoutput>
+#REQUEST.message#
+</cfoutput>
