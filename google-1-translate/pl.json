@@ -1,0 +1,23 @@
+{
+   "home": {
+      "title": "Witamy w aplikacji",
+      "welcome": "Witamy",
+      "login": "Zaloguj Się",
+      "about": "O"
+   },
+   "login": {
+      "title": "Login użytkownika",
+      "input": {
+         "login": "Zaloguj Się",
+         "password": "Hasło",
+         "button": "Udać się"
+      },
+      "form": {
+         "title": "Zaloguj Się",
+         "help": "Wprowadź swój login lub adres e-mail i hasło i kontynuuj"
+      }
+   },
+   "about": {
+      "title": "O stronie"
+   }
+}

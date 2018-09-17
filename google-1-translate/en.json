@@ -1,0 +1,23 @@
+{
+   "home": {
+      "title": "Welcome to application",
+      "welcome": "Welcome",
+      "login": "Login",
+      "about": "About"
+   },
+   "login": {
+      "title": "User login",
+      "input": {
+         "login": "Login",
+         "password": "Password",
+         "button": "Go"
+      },
+      "form": {
+         "title": "Login",
+         "help": "Please enter your login or email and password and proceed"
+      }
+   },
+   "about":{
+      "title": "About page"
+   }
+}
