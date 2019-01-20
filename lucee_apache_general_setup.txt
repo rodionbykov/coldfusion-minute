@@ -1,0 +1,25 @@
+<IfModule mod_proxy.c>
+        <Proxy *>
+        Allow from 127.0.0.1
+        </Proxy>
+        ProxyPreserveHost On
+        ProxyPassMatch ^/(.+\.cf[cm])(/.*)?$ http://127.0.0.1:8888/$1$2
+        ProxyPassMatch ^/(.+\.cfchart)(/.*)?$ http://127.0.0.1:8888/$1$2
+        ProxyPassMatch ^/(.+\.cfml)(/.*)?$ http://127.0.0.1:8888/$1$2
+        # optional mappings
+        #ProxyPassMatch ^/flex2gateway/(.*)$ http://127.0.0.1:8888/flex2gateway/$1
+        #ProxyPassMatch ^/messagebroker/(.*)$ http://127.0.0.1:8888/messagebroker/$1
+        #ProxyPassMatch ^/flashservices/gateway(.*)$ http://127.0.0.1:8888/flashservices/gateway$1
+        #ProxyPassMatch ^/openamf/gateway/(.*)$ http://127.0.0.1:8888/openamf/gateway/$1
+        #ProxyPassMatch ^/rest/(.*)$ http://127.0.0.1:8888/rest/$1
+        ProxyPassReverse / http://127.0.0.1:8888/
+</IfModule>
+
+LoadModule modcfml_module /opt/lucee/sys/mod_cfml/centos6-httpd24-x64/mod_cfml.so
+CFMLHandlers ".cfm .cfc .cfml"
+ModCFML_SharedKey "2cd04393c4603845df6605cf941012c2bdf35df9896808640daf6d9deacfe7a4"
+LogHeaders false
+LogHandlers false
+LogAliases false
+VDirHeader false
+

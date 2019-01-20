@@ -1,0 +1,35 @@
+
+    RewriteEngine On
+
+    # RewriteCond %{HTTPS} !=on
+    # RewriteRule ^/?(.*) https://%{SERVER_NAME}/$1 [R,L]
+
+    # Forbid access to Railo Admin URLs:
+    RewriteRule ^/lucee/admin/(.+\.cf[cm]) - [F]
+    RewriteRule ^/lucee/doc/(.+\.cf[cm]) - [F]
+
+    # Proxy "secret" Railo Admin URLs to "real" Railo Admin URLs on Tomcat:
+    RewriteRule ^/secret/admin/(.*\.cf[cm])$ http://%{HTTP_HOST}:8888/lucee/admin/$1 [P]
+
+    # If it's a CFML (*.cfc or *.cfm) request, just proxy it to Tomcat:
+    RewriteRule ^(.+\.cf[cm])(/.*)?$ http://%{HTTP_HOST}:8888$1$2 [P]
+
+    # If trailing slash and real directory, then append index.cfm and proxy it to Tomcat/Railo:
+    RewriteCond %{DOCUMENT_ROOT}%{REQUEST_URI} -d
+    RewriteRule ^(.+/)$ http://%{HTTP_HOST}:8888%{REQUEST_URI}index.cfm [P]
+
+    # If it's a real file (and we haven't proxied to Tomcat, so it must be static), just serve it:
+    RewriteCond %{DOCUMENT_ROOT}%{REQUEST_URI} -f
+    RewriteRule . - [L]
+
+    # NOTE: Everything else must be a CMS URL path (letters/numbers/hyphens/slashes only), or a 404...
+
+    # Require trailing slash at this point, if otherwise valid CMS URL:
+    RewriteRule ^([a-zA-Z0-9/-]+[^/])$ $1/ [R=301,L]
+
+    # Valid CMS URL path is proxied to Tomcat/Railo:
+    # MUST COME AFTER ANY OTHER FIXED/EXPECTED REWRITES!
+    RewriteRule ^([a-zA-Z0-9/-]+)$ http://%{HTTP_HOST}:8888/index.cfm%{REQUEST_URI} [NE,P]
+
+    # Anything else must be a 404 error:
+    RewriteRule . http://%{HTTP_HOST}:8888/index.cfm/this-will-force-a-404/ [NE,P]
