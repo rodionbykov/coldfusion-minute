@@ -2,12 +2,15 @@
 <html lang="en">
   <head>
     <!-- this is HTML commentary, it will be sent to browser, but not displayed -->
-    <title>Second template example: static output -- Lucee Minute</title>
+    <title>Thirds template example: template includes other template -- Lucee Minute</title>
   </head>
   <body>
     <!--- this is CFML commentary, it will be excluded from output by Lucee engine --->
     <h1>Hello from CFML template!</h1>
     <h2>This is plain HTML</h2>
-    <p>No dynamic output intended. Lucee ignores any static text, sending it to browser without changes.</p>
+    <p>&lt;CFINCLUDE&gt; tag allows to include one template from another template.
+    
+    <cfinclude template="someothertemplate.cfm" />
+
   </body>
 </html>
