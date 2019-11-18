@@ -1,5 +1,5 @@
 <cfoutput>
   <h3>Hello, World!</h3>
-  <p>This is first page</p>
-  <p><a href="#buildURL("main.second")#">Second page</a>
+  <p>#rc.message#</p>
+  <p><a href="#buildURL("main.second")#">Go to Second page</a>
 </cfoutput>
