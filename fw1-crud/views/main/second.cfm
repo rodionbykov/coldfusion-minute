@@ -1,6 +1,5 @@
 <cfoutput>
-
-  <h1>Chapter II</h1>
+  <h3>Chapter II</h3>
   <p>This is second page</p>
   <p><a href="#buildURL("")#">Go home</a>
 </cfoutput>
