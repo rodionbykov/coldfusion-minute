@@ -1,5 +1,14 @@
 <cfoutput>
-  <h3>Hello, World!</h3>
-  <p>#rc.message#</p>
-  <p><a href="#buildURL("main.second")#">Go to Second page</a>
+  <!-- Main jumbotron for a primary marketing message or call to action -->
+  <cf_jumbotron url="#buildurl("main.list")#" message="#rc.message#">
+
+  <div class="container">
+    <!-- Example row of columns -->
+    <div class="row">
+      <cf_news>
+      <cf_news>
+      <cf_news>
+    </div>
+    <hr>
+  </div> <!-- /container -->
 </cfoutput>
