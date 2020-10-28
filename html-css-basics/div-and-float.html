@@ -1,0 +1,61 @@
+<body>
+<h1>float: right; float: left;</h1>
+
+<p>It's always good to have a lot of float elements.</p>
+<p>Always put float element width, no sense otherwise, block always has its parent's block</p>
+<p>Blocks are floated up, aligned by top side</p>
+<p>String elements are always start with new line, height of line is a height of tallest element.</p>
+
+<style>
+
+  * {
+    border: 1px solid red;
+    margin: 0px;
+    padding: 0px;
+  }
+
+  #outer {
+    width: 1000px;
+    margin: 0px auto;
+  }
+
+  #logo {
+    width: 100px;
+    height: 100px;
+    float: left;
+  }
+
+  #menu {
+    float: left;
+    width: 200px;
+    clear: both;
+  }
+
+  #content {
+    float: left;
+    width: 600px;
+  }
+
+  #sidebar {
+    float: left;
+    width: 160px;
+    height: 400px;
+  }
+
+  #footer {
+    float: left;
+    width: 100%;
+    clear: both;
+  }
+
+</style>
+
+<div id="outer">
+  <div id="logo">Logo</div>
+  <div id="menu">Menu</div>
+  <div id="content">Content</div>
+  <div id="sidebar">Sidebar</div>
+  <div id="footer">Footer</div>
+</div>
+
+</body>
