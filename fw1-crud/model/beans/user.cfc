@@ -8,21 +8,22 @@
   <cfproperty name="level" />
 
   <cffunction  name="init">
-    <cfset id = 0 />
-    <cfset login = "" />
-    <cfset firstname = "" />
-    <cfset lastname = "" />
-    <cfset description = "" />
-    <cfset level = 0 />
+    <cfset variables.id = 0 />
+    <cfset variables.login = "" />
+    <cfset variables.firstname = "" />
+    <cfset variables.lastname = "" />
+    <cfset variables.description = "" />
+    <cfset variables.level = 0 />
 
     <cfreturn this />
   </cffunction>
 
   <cffunction  name="getFullName">
-    <cfreturn firstname & " " & lastname>
+    <cfreturn variables.firstname & " " & variables.lastname>
   </cffunction>
 
   <cffunction  name="getLastFirstName">
-    <cfreturn lastname &", " & firstname>
+    <cfreturn variables.lastname &", " & variables.firstname>
   </cffunction>
+
 </cfcomponent>

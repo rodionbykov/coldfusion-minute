@@ -1,10 +1,10 @@
 <cfcomponent accessors="true">
 
-  <cffunction name="getUsers">
-    <cfargument name="page" type="numeric" default="1" />
-    <cfargument name="word" type="any" default="" />
-    <cfargument name="pagesize" type="numeric" default="10" />
-    <cfif page GT 1>
+  <cffunction name="getAll">
+    <cfargument name="page" />
+    <cfargument name="pagesize" />
+
+    <cfif page gt 1>
       <cfset offset = (page-1) * pagesize />
     <cfelse>
       <cfset offset = 0 />
@@ -15,10 +15,8 @@
     <cfquery name="qry">
       SELECT id, login, firstname, lastname, description, level
       FROM users
-      WHERE firstname LIKE <cfqueryparam value="%#word#%" cfsqltype="cf_sql_varchar" />
-        OR lastname LIKE <cfqueryparam value="%#word#%" cfsqltype="cf_sql_varchar" />
       ORDER BY id
-      LIMIT #offset#, #pagesize#
+      LIMIT <cfqueryparam cfsqltype="cf_sql_integer" value="#offset#" />, <cfqueryparam cfsqltype="cf_sql_integer" value="#pagesize#" />
     </cfquery>
 
     <cfloop query="qry">
@@ -35,26 +33,31 @@
     <cfreturn result />
   </cffunction>
 
-  <cffunction name="getUsersCount">
-    <cfargument name="page" type="numeric" default="1" />
-    <cfargument name="word" type="any" default="" />
+  <cffunction name="getCount">
+    <cfargument name="searchterm" type="any" default="" />
 
     <cfset result = 0 />
 
     <cfquery name="qry">
-      SELECT count(id) AS users
+      SELECT count(id) AS cnt
       FROM users
-      WHERE firstname LIKE <cfqueryparam value="%#word#%" cfsqltype="CF_SQL_VARCHAR" />
-        OR lastname LIKE <cfqueryparam value="%#word#%" cfsqltype="CF_SQL_VARCHAR" />
+      <cfif Len(arguments.searchterm) gt 0>
+      WHERE firstname LIKE <cfqueryparam value="%#searchterm#%" cfsqltype="cf_sql_varchar" />
+        OR lastname LIKE <cfqueryparam value="%#searchterm#%" cfsqltype="cf_sql_varchar" />
+      </cfif>
     </cfquery>
-    <cfif qry.RecordCount GT 0>
-      <cfset result = qry.users />
+    <cfif qry.RecordCount gt 0>
+      <cfset result = qry.cnt />
     </cfif>
 
     <cfreturn result>
   </cffunction>
 
-  <cffunction name="getUser">
+  <cffunction name="new">
+    <cfreturn new model.beans.user() />
+  </cffunction>
+
+  <cffunction name="get">
     <cfargument name="id" type="numeric" />
 
     <cfset result = new model.beans.user() />
@@ -77,59 +80,74 @@
     <cfreturn result>
   </cffunction>
 
-    <cffunction  name="saveUser">
+    <cffunction name="saveUser">
       <cfargument name="user" />
-        <cfif actor.getId() EQ 0>
-            <cfquery>
-                INSERT INTO actor (first_name, last_name, last_update, active)
+
+        <cfif user.getID() eq 0>
+            <cfquery result="res">
+                INSERT INTO users (login, firstname, lastname, description, level)
                 VALUES (
-                    <cfqueryparam value="#actor.getFirstname()#" cfsqltype="CF_SQL_VARCHAR">,
-                    <cfqueryparam value="#actor.getLastname()#" cfsqltype="CF_SQL_VARCHAR">,
-                    <cfqueryparam value="#now()#" cfsqltype="cf_sql_timestamp">,
-                    <cfqueryparam value="#actor.getActive()#" cfsqltype="CF_SQL_INTEGER">
+                    <cfqueryparam value="#user.getLogin()#" cfsqltype="cf_sql_varchar" />,
+                    <cfqueryparam value="#user.getFirstname()#" cfsqltype="cf_sql_varchar" />,
+                    <cfqueryparam value="#user.getLastname()#" cfsqltype="cf_sql_varchar" />,
+                    <cfqueryparam value="#user.getDescription()#" cfsqltype="cf_sql_varchar" />,
+                    <cfqueryparam value="#user.getLevel()#" cfsqltype="cf_sql_integer" />
                 )
             </cfquery>
+            <cfset user.setID(res) />
         <cfelse>
             <cfquery name="qry">
-                UPDATE actor SET
-                    first_name = <cfqueryparam value="#actor.getFirstname()#" cfsqltype="CF_SQL_VARCHAR">,
-                    last_name = <cfqueryparam value="#actor.getLastname()#" cfsqltype="CF_SQL_VARCHAR">,
-                    last_update = <cfqueryparam value="#now()#" cfsqltype="cf_sql_timestamp">,
-                    active=<cfqueryparam value="#actor.getActive()#" cfsqltype="CF_SQL_INTEGER">
-                WHERE actor_id=<cfqueryparam value="#actor.getId()#" cfsqltype="CF_SQL_INTEGER">
+                UPDATE users SET
+                    login = <cfqueryparam value="#user.getLogin()#" cfsqltype="cf_sql_varchar" />,
+                    firstname = <cfqueryparam value="#user.getFirstname()#" cfsqltype="cf_sql_varchar" />,
+                    lastname = <cfqueryparam value="#user.getLastname()#" cfsqltype="cf_sql_varchar" />,
+                    description = <cfqueryparam value="#user.getDescription()#" cfsqltype="cf_sql_varchar" />,
+                    level = <cfqueryparam value="#user.getLevel()#" cfsqltype="cf_sql_integer" />
+                WHERE id = <cfqueryparam value="#user.getID()#" cfsqltype="cf_sql_integer" />
             </cfquery>
         </cfif>
+      
+      <cfreturn user />
     </cffunction>
 
-    <cffunction  name="deleteActor">
-        <cfargument  name="id" type="numeric">
-        <cfquery name="qry">
-            UPDATE actor SET
-            active = <cfqueryparam value="0" cfsqltype="CF_SQL_INTEGER">,
-            last_update = <cfqueryparam value="#now()#" cfsqltype="cf_sql_timestamp">
-            WHERE actor_id=<cfqueryparam value="#id#" cfsqltype="CF_SQL_INTEGER">
-        </cfquery>
+    <cffunction name="delete">
+      <cfargument name="id" type="numeric" />
+
+      <cfquery>
+        DELETE FROM users
+        WHERE id = <cfqueryparam value="#arguments.id#" cfsqltype="cf_sql_integer" />
+      </cfquery>
     </cffunction>
 
-    <cffunction  name="searchActor">
-        <cfargument  name="word" type="any">
-        <cfset result=[]>
-        <cfquery name="qry">
-            SELECT * FROM actor
-            WHERE first_name LIKE <cfqueryparam value="%#word#%" cfsqltype="CF_SQL_VARCHAR">
-            or last_name LIKE <cfqueryparam value="%#word#%" cfsqltype="CF_SQL_VARCHAR">
-            ORDER BY actor_id DESC LIMIT 10
-        </cfquery>
-        <cfloop query="qry">
-            <cfset actor=new model.beans.actor()>
-            <cfset actor.setid(qry.actor_id)>
-            <cfset actor.setfirstname(qry.first_name)>
-            <cfset actor.setlastname(qry.last_name)>
-            <cfset actor.setupdated(qry.last_update)>
-            <cfset actor.setactive(qry.active)>
-            <cfset result.append(actor)>
-        </cfloop>
-        <cfreturn result>
+    <cffunction name="find">
+      <cfargument name="searchterm" />
+
+      <cfset result = [] />
+      
+      <cfquery name="qry">
+        SELECT id, login, firstname, lastname, description, level
+        FROM users
+        <cfif Len(arguments.searchterm) gt 0>
+        WHERE firstname LIKE <cfqueryparam value="%#searchterm#%" cfsqltype="cf_sql_varchar" />
+          OR lastname LIKE <cfqueryparam value="%#searchterm#%" cfsqltype="cf_sql_varchar" />
+        </cfif>
+        ORDER BY id
+      </cfquery>
+      
+      <cfloop query="qry">
+        <cfset user = new model.beans.user() />
+
+        <cfset user.setID(qry.id) />
+        <cfset user.setLogin(qry.login) />
+        <cfset user.setFirstName(qry.firstname) />
+        <cfset user.setLastName(qry.lastname) />
+        <cfset user.setDescription(qry.description) />
+        <cfset user.setLevel(qry.level) />
+
+        <cfset result.append(user) />
+      </cfloop>
+
+      <cfreturn result />
     </cffunction>
 
 </cfcomponent>

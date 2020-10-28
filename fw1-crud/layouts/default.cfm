@@ -48,7 +48,7 @@
         <a class="nav-link" href="#buildURL("main.list")#">List</a>
       </li>
       <li class="nav-item">
-        <a class="nav-link" href="#buildURL("main.add")#">Add</a>
+        <a class="nav-link" href="#buildURL("main.form")#">Add</a>
       </li>
       <!---
       <li class="nav-item dropdown">
@@ -62,7 +62,7 @@
       --->
     </ul>
     <cfoutput>
-    <form class="form-inline my-2 my-lg-0" action="#buildurl("main.list")#" method="POST">
+    <form class="form-inline my-2 my-lg-0" action="#buildurl("main.search")#" method="POST">
       <input class="form-control mr-sm-2" type="text" placeholder="Search" aria-label="Search" name="word" value="#rc.word#">
       <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
     </form>
@@ -74,7 +74,7 @@
 </main>
 
 <footer class="container">
-  <p>&copy; Company 2017-2019</p>
+  <p>&copy; #Year(Now())#</p>
 </footer>
 <script src="assets/js/jquery-3.3.1.slim.min.js"></script>
 <script src="assets/js/bootstrap.bundle.min.js"></script>
